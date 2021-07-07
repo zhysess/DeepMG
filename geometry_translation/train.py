@@ -29,7 +29,10 @@ class Trainer:
                 iter_loss_all, iter_loss_road, iter_loss_cl, iter_metrics, iter_road_metrics = self.model.optimize_parameters()
                 iter_metrics = iter_metrics.numpy()
                 iter_road_metrics = iter_road_metrics.numpy()
-                print("[Epoch %d/%d] [Batch %d/%d] [Loss: %f] [Road Loss: %f] [CL Loss: %f] [Precision: %f] [Recall: %f] [F1: %f] [Road IOU: %f] [CL IOU: %f]" % (epoch, opt.n_epochs, i, len(train_dl), iter_loss_all.item(), iter_loss_road.item(), iter_loss_cl.item(), iter_metrics[0], iter_metrics[1], iter_metrics[2], iter_road_metrics[3], iter_metrics[3]))
+                print("[Epoch %d/%d] [Batch %d/%d] [Loss: %f] [Road Loss: %f] [CL Loss: %f] [Precision: %f] [Recall: %f] [F1: %f] [Road IOU: %f] [CL IOU: %f]"
+                      % (epoch, opt.n_epochs, i, len(train_dl), iter_loss_all.item(),
+                         iter_loss_road.item(), iter_loss_cl.item(), iter_metrics[0], iter_metrics[1],
+                         iter_metrics[2], iter_road_metrics[3], iter_metrics[3]))
                 tot_iters += 1
 
                 if tot_iters % self.opt.display_freq == 0:  # display images on visdom and save images to a HTML file

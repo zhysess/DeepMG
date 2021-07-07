@@ -1,5 +1,6 @@
 import os
 import sys
+
 sys.path.append('../tptk/')
 from tptk.common.road_network import load_rn_shp
 from tptk.common.trajectory import parse_traj_file
@@ -7,7 +8,7 @@ from tptk.common.grid import Grid
 from tptk.common.mbr import MBR
 from tptk.common.spatial_func import distance, bearing, LAT_PER_METER
 import cv2
-from tqdm import tqdm
+from tqdm import tqdm  # 进度条
 import numpy as np
 import json
 import shutil
@@ -26,7 +27,7 @@ def generate_point_image(traj_dir, grid_idx, feature_path):
                     pt_cnt[row_idx, col_idx] += 1
                 except IndexError:
                     continue
-    pt_cnt = pt_cnt / 2 * 255
+    pt_cnt = pt_cnt / 2 * 255  # 有两个及以上轨迹点才算
     pt_cnt[pt_cnt > 255] = 255
     cv2.imwrite(os.path.join(feature_path, 'point.png'), pt_cnt)
 
@@ -92,7 +93,7 @@ def generate_dir_dist_data(traj_dir, grid_idx, feature_path):
         traj_list = parse_traj_file(os.path.join(traj_dir, filename))
         for traj in traj_list:
             for i in range(len(traj.pt_list) - 1):
-                cur_pt, next_pt = traj.pt_list[i], traj.pt_list[i+1]
+                cur_pt, next_pt = traj.pt_list[i], traj.pt_list[i + 1]
                 if MIN_DISTANCE_IN_METER < distance(cur_pt, next_pt) < MAX_DISTANCE_IN_METER:
                     try:
                         row_idx, col_idx = grid_idx.get_matrix_idx(cur_pt.lat, cur_pt.lng)
@@ -165,8 +166,8 @@ def generate_road_centerline_label(rn_path, grid_idx, label_path):
     centerline_img = np.zeros((grid_idx.row_num, grid_idx.col_num), dtype=np.uint8)
     for edge_key in tqdm(rn.edges):
         coords = rn.edges[edge_key]['coords']
-        for i in range(len(coords)-1):
-            start_node, end_node = coords[i], coords[i+1]
+        for i in range(len(coords) - 1):
+            start_node, end_node = coords[i], coords[i + 1]
             try:
                 y1, x1 = grid_idx.get_matrix_idx(start_node.lat, start_node.lng)
                 y2, x2 = grid_idx.get_matrix_idx(end_node.lat, end_node.lng)
@@ -182,8 +183,8 @@ def generate_road_region_label(centerline_path, radius, label_path):
     H, W = centerline_img.shape
     region_img = np.zeros(centerline_img.shape, dtype=np.uint8)
     for i, j in tqdm(list(zip(centerline_pixels[0], centerline_pixels[1]))):
-        for y in range(max(i-radius, 0), min(i+radius+1, H)):
-            for x in range(max(j-radius, 0), min(j+radius+1, W)):
+        for y in range(max(i - radius, 0), min(i + radius + 1, H)):
+            for x in range(max(j - radius, 0), min(j + radius + 1, W)):
                 region_img[y, x] = 255
     cv2.imwrite(os.path.join(label_path, 'region.png'), region_img)
 
@@ -257,7 +258,7 @@ def split_train_val_test(dataset_path, test_row_min, test_row_max, test_col_min,
 
 
 if __name__ == '__main__':
-    with open(sys.argv[1], 'r') as f:
+    with open('../data/baidu_big_traj/conf_big_baidu.json', 'r') as f:
         conf = json.load(f)
     traj_dir = '../data/{}/traj/'.format(conf['dataset']['dataset_name'])
     rn_path = '../data/{}/rn/'.format(conf['dataset']['dataset_name'])

@@ -6,4 +6,8 @@ __pycache__/
 
 geometry_translation/checkpoints/
 
-geometry_translation/results/
+geometry_translation/didi_results/
+
+china-latest.osm.pbf
+
+beijing/
