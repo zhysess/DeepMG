@@ -2,11 +2,13 @@
 
 data/
 
+beijing/
+
 __pycache__/
 
 geometry_translation/checkpoints/
 
-geometry_translation/didi_results/
+geometry_translation/results/
 
 china-latest.osm.pbf
 
